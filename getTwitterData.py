@@ -4,25 +4,18 @@ import csv
 import time
 import pandas as pd
 
-# Pass the four tokens in the headers while making any request made
-# to the GraphQL server for fetching data.
-auth_token = "8f030fb87a4a924247012345726f4f75c0d154b0"
-ct0 = "3fb26907c0f7f5332fe249009601881e"
-kdt = "9d363BDQ7RGv2DW1bOgEtFjmGtUQH3VJBjzH4sEU"
-twid = "1682092183455760384"
-
-# mit den backslashes, wsl ist nur die Zahl die ID?
-# "twid":"\\"u=1682092183455760384\\""
 
 # Vom eigenen gehosteten GraphQL Server
 graphql_url = "http://localhost:8001/graphql"
 
+# Pass the four tokens in the headers while making any request made
+# to the GraphQL server for fetching data.
 # Headers
 headers = {
-    'auth_token': 'cf36515525102adb4024e3adb0f6c79f5828c762',
-    'ct0': 'c4ddc89ea3f1739bd775e34ce9a3ddc0',
-    'kdt': 'JykXCq572htOlUWV29fh08giuu4kHwjMXCwVXXRw',
-    'twid': '1682092183455760384'
+    'auth_token': 'cf3525102adb4024e3adb0f6c79f5828c762',
+    'ct0': 'c4ddc89ea339bd775e34ce9a3ddc0',
+    'kdt': 'JykXCq572hUWV29fh08giuu4kHwjMXCwVXXRw',
+    'twid': '1682092185760384'
 }
 
 # Query for getting 4 tokens
@@ -42,30 +35,6 @@ def make_post_request(url, body):
     print("response status code:", response.status_code)
     if response.status_code == 200:
         print("response:", response.content)
-
-
-def get_userid_from_dataset(data):
-    # Read the CSV file into a DataFrame
-    df = pd.read_csv(data, encoding="utf-8", sep=';')
-
-    # Keep only the userid columns
-    df = df[['user_id1', 'user_id2']]
-
-    # Updating user_id1 column with new user_ids from user_id2 column
-    df['user_id1'] = df['user_id2'].combine_first(df['user_id1'])
-
-    # Drop the second user_id column
-    df = df[['user_id1']]
-
-    # Remove empty rows
-    df.dropna(inplace=True)
-    df.reset_index(drop=True, inplace=True)
-
-    # Change all numbers to numeric values
-    df['user_id1'] = df['user_id1'].astype(float)
-
-    df.to_csv("./data/user_ids.csv", sep=',', encoding='utf-8')
-    # TODO: userid nummern sind noch komisch formatiert
 
 
 def get_username_from_dataset(data):
@@ -134,19 +103,9 @@ def get_all_user_descriptions(usernames_csv):
 
     usernames_df.to_csv("./data/username_with_description.csv", sep=',', encoding='utf-8')
 
-    # # Loop over the DataFrame to retrieve usernames and their descriptions
-    # usernames_df['profile'] = usernames_df['user'].apply(get_user_description)
-    # usernames_df.to_csv("./data/username_with_description.csv", sep=',', encoding='utf-8')
-
-
 
 def main():
-    #get_userid_from_dataset("./data/Bundestagswahl_2021_Kandidierenden.csv")
-    #get_username_from_dataset("./data/EPINetz_TwitterPoliticians_2021.csv")
-    #make_post_request(graphql_url, body)
-    #get_all_user_descriptions("./data/username.csv")
     get_all_user_descriptions("./data/username.csv")
-    #get_user_description("koehler_fdp")
 
 
 if __name__ == "__main__":
